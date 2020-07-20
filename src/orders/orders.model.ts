@@ -7,7 +7,7 @@ export const OrderSchema = new mongoose.Schema({
     enum: ['created', 'confirmed', 'delivered', 'cancelled'],
     required: true,
   },
-  items: [String],
+  productCode: String,
 });
 
 export type OrderStatusType =
@@ -20,5 +20,5 @@ export interface Order extends mongoose.Document {
   id: string;
   orderedBy: string; // string for now instead of user id
   orderStatus: OrderStatusType;
-  items?: string[]; // array of product names for now instead of product ids
+  productCode: string; // array of product names for now instead of product ids
 }

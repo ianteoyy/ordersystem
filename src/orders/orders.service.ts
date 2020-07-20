@@ -13,11 +13,11 @@ export class OrdersService {
     @InjectModel('Order') private readonly orderModel: Model<Order>,
   ) {}
 
-  async insertOrder(orderedBy: string, items?: string[]): Promise<string> {
+  async insertOrder(orderedBy: string, productCode: string): Promise<string> {
     const newOrder = new this.orderModel({
       orderedBy,
       orderStatus: 'created',
-      items,
+      productCode,
     });
     const result = await newOrder.save();
     return result.id as string;
@@ -29,7 +29,7 @@ export class OrdersService {
     return orders.map(order => ({
       id: order.id,
       orderedBy: order.orderedBy,
-      items: order.items,
+      productCode: order.productCode,
       orderStatus: order.orderStatus,
     })) as Order[];
   }
@@ -40,14 +40,14 @@ export class OrdersService {
     id: string;
     orderStatus: 'cancelled' | 'delivered' | 'confirmed' | 'created';
     orderedBy: string;
-    items: string[];
+    productCode: string;
   }> {
     const order = await this.findOrder(orderId);
     return {
       id: order.id,
       orderStatus: order.orderStatus,
       orderedBy: order.orderedBy,
-      items: order.items,
+      productCode: order.productCode,
     };
   }
 

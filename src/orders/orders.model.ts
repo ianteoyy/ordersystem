@@ -8,6 +8,7 @@ export const OrderSchema = new mongoose.Schema({
     required: true,
   },
   productCode: String,
+  price: Number,
 });
 
 export type OrderStatusType =
@@ -21,4 +22,5 @@ export interface Order extends mongoose.Document {
   orderedBy: string; // string for now instead of user id
   orderStatus: OrderStatusType;
   productCode: string; // array of product names for now instead of product ids
+  price: number;
 }

@@ -10,8 +10,9 @@ export class OrdersController {
   async addOrder(
     @Body('user') user: string,
     @Body('product') productCode: string,
+    @Body('price') price: number,
   ): Promise<{ id: string }> {
-    const generatedId = await this.ordersService.insertOrder(user, productCode);
+    const generatedId = await this.ordersService.insertOrder(user, productCode, price);
     return { id: generatedId };
   }
 

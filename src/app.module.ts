@@ -9,7 +9,7 @@ import { OrdersModule } from './orders/orders.module';
   imports: [
     OrdersModule,
     MongooseModule.forRoot(
-      'mongodb+srv://test2:FILXDwYhYYSg5m99@orders.dxs0h.mongodb.net/order-system?retryWrites=true&w=majority',
+      `mongodb+srv://test2:${process.env.MONGODB_PASSWORD}@orders.dxs0h.mongodb.net/order-system?retryWrites=true&w=majority`,
     ),
   ],
   controllers: [AppController],

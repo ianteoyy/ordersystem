@@ -9,7 +9,7 @@ export class OrdersController {
   @Post()
   async addOrder(
     @Body('user') user: string,
-    @Body('items') productCode: string,
+    @Body('product') productCode: string,
   ): Promise<{ id: string }> {
     const generatedId = await this.ordersService.insertOrder(user, productCode);
     return { id: generatedId };

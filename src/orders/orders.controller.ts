@@ -34,7 +34,7 @@ export class OrdersController {
   @Get('status/:id')
   async getOrderStatus(@Param('id') orderId: string) {
     const { orderStatus } = await this.ordersService.getOrderById(orderId);
-    return orderStatus;
+    return { orderStatus: orderStatus };
   }
 
   @Patch('cancel/:id')

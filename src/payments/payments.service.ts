@@ -1,7 +1,6 @@
 import {
   Injectable,
   NotFoundException,
-  BadRequestException,
 } from '@nestjs/common';
 import { Payment } from './payments.model';
 import { InjectModel } from '@nestjs/mongoose';
@@ -37,7 +36,7 @@ export class PaymentsService {
 
     const result = new Promise(resolve => {
       setTimeout(() => {
-        let isSuccessful = Math.random() > 0.5;
+        const isSuccessful = Math.random() > 0.5;
         resolve(isSuccessful);
       }, 1500);
     });

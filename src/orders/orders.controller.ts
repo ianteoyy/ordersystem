@@ -33,7 +33,8 @@ export class OrdersController {
 
   @Get('status/:id')
   async getOrderStatus(@Param('id') orderId: string) {
-    return (await this.ordersService.getOrderById(orderId)).orderStatus;
+    const { orderStatus } = await this.ordersService.getOrderById(orderId);
+    return orderStatus;
   }
 
   @Patch('cancel/:id')

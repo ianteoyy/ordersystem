@@ -12,7 +12,11 @@ export class OrdersController {
     @Body('product') productCode: string,
     @Body('price') price: number,
   ): Promise<{ id: string }> {
-    const generatedId = await this.ordersService.insertOrder(user, productCode, price);
+    const generatedId = await this.ordersService.insertOrder(
+      user,
+      productCode,
+      price,
+    );
     return { id: generatedId };
   }
 
@@ -36,5 +40,13 @@ export class OrdersController {
   async cancelOrder(@Param('id') orderId: string): Promise<null> {
     await this.ordersService.cancelOrder(orderId);
     return null;
+  }
+
+  @Patch('complete')
+  async completeOrder(
+    @Body('orderId') orderId: string,
+    @Body('result') result: string,
+  ): Promise<void> {
+    await this.ordersService.onCompletedPayment(orderId, result);
   }
 }

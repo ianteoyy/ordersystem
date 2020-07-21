@@ -13,12 +13,16 @@ export class OrdersService {
     @InjectModel('Order') private readonly orderModel: Model<Order>,
   ) {}
 
-  async insertOrder(orderedBy: string, productCode: string, price: number): Promise<string> {
+  async insertOrder(
+    orderedBy: string,
+    productCode: string,
+    price: number,
+  ): Promise<string> {
     const newOrder = new this.orderModel({
       orderedBy,
       orderStatus: 'created',
       productCode,
-      price
+      price,
     });
     const result = await newOrder.save();
     return result.id as string;
@@ -32,7 +36,7 @@ export class OrdersService {
       orderedBy: order.orderedBy,
       productCode: order.productCode,
       orderStatus: order.orderStatus,
-      price: order.price
+      price: order.price,
     })) as Order[];
   }
 
@@ -56,20 +60,45 @@ export class OrdersService {
   }
 
   async cancelOrder(orderId: string): Promise<void> {
-    const updatedOrder = await this.findOrder(orderId);
+    const orderToUpdate = await this.findOrder(orderId);
 
-    switch (updatedOrder.orderStatus) {
+    switch (orderToUpdate.orderStatus) {
       case 'cancelled':
         throw new BadRequestException('Order has already been cancelled!');
       case 'delivered':
         throw new BadRequestException('Order is already being delivered!');
       default:
         // confirmed/created
-        updatedOrder.orderStatus = 'cancelled';
+        orderToUpdate.orderStatus = 'cancelled';
         break;
     }
 
-    updatedOrder.save();
+    orderToUpdate.save();
+  }
+
+  async onCompletedPayment(
+    orderId: string,
+    paymentResult: string,
+  ): Promise<void> {
+    const orderToUpdate = await this.findOrder(orderId);
+
+    if (paymentResult === 'success') {
+      switch (orderToUpdate.orderStatus) {
+        case 'cancelled':
+          throw new BadRequestException('Order has already been cancelled!');
+        case 'delivered':
+          throw new BadRequestException('Order is already being delivered!');
+        default:
+          // confirmed/created
+          orderToUpdate.orderStatus = 'confirmed';
+          this.scheduleDelivery(orderId);
+          break;
+      }
+    } else {
+      orderToUpdate.orderStatus = 'cancelled';
+    }
+
+    orderToUpdate.save();
   }
 
   private async findOrder(id: string): Promise<Order> {
@@ -84,5 +113,14 @@ export class OrdersService {
     }
 
     return order;
+  }
+
+  private async scheduleDelivery(orderId: string): Promise<void> {
+    const orderToUpdate = await this.findOrder(orderId);
+    const ONE_HOUR = 1000 * 60 * 60;
+    setTimeout(() => {
+      orderToUpdate.orderStatus = 'delivered';
+      orderToUpdate.save();
+    }, Math.random() * 3 * ONE_HOUR);
   }
 }

@@ -117,10 +117,10 @@ export class OrdersService {
 
   private async scheduleDelivery(orderId: string): Promise<void> {
     const orderToUpdate = await this.findOrder(orderId);
-    const ONE_HOUR = 1000 * 60 * 60;
+    const TEN_MINUTES = 1000 * 60 * 10;
     setTimeout(() => {
       orderToUpdate.orderStatus = 'delivered';
       orderToUpdate.save();
-    }, Math.random() * 3 * ONE_HOUR);
+    }, Math.random() * TEN_MINUTES);
   }
 }

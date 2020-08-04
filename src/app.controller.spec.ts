@@ -15,8 +15,8 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+    it('should return redirect message', () => {
+      expect(appController.getHello()).toBe('Hey you shouldn\'t be here! Go to orders-react.netlify.com');
     });
   });
 });
